@@ -16,8 +16,7 @@ unsigned int serial_comm_i = 0;  // counter for serial communication
 // dax, day, daz: the angle velocity of robot in x, y, z directions
 struct state{
   double ax, ay, az, dax, day, daz;
-} 
-s = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // initialize state variables to 0
+} s = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // initialize state variables to 0
 
 void setup(){ // setup communication
   Wire.begin();
