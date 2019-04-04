@@ -59,6 +59,11 @@ void loop(){
     if (serial_comm_i >= 10) { // only send data via serial port every 10 loops
       serial_comm_i = 0; // reset serial communication counter
       // Try to limit the data via serial, it's slow. It'll limit loop time
+      // print raw data for troubleshooting purpose (eg. re-calibration)
+//      Serial.print(GyX); Serial.print(", ");
+//      Serial.print(GyY); Serial.print(", ");
+//      Serial.print(GyZ); Serial.print(", ");
+
       Serial.print(s[0]); Serial.print(", ");
       Serial.print(s[1]); Serial.print(", ");
       Serial.print(s[2]); Serial.print(", ");
