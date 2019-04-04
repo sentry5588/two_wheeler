@@ -70,38 +70,18 @@ def main():
     glRotatef(0, 0, 0, 0)
         
     i = 0
-    K_x_pressed = True
-    K_y_pressed = True
-    K_z_pressed = True
-    x = 0
-    y = 0
-    z = 0
+    x = 0 # initialize rotate position in x direction
+    y = 0 # initialize rotate position in y direction
+    z = 0 # initialize rotate position in z direction
     while i < 10000:
         for event in pygame.event.get():
+            # close the graphic if escape key is pressed
             if event.type == KEYDOWN and event.key == K_ESCAPE:
                 pygame.quit()
                 quit()
-            elif event.type == KEYDOWN and event.key == K_x:
-                if K_x_pressed == False:
-                    K_x_pressed = True
-                else:
-                    K_x_pressed = False
-            elif event.type == KEYDOWN and event.key == K_y:
-                if K_y_pressed ==False:
-                    K_y_pressed = True
-                else:
-                    K_y_pressed = False
-            elif event.type == KEYDOWN and event.key == K_z:
-                if K_z_pressed == False:
-                    K_z_pressed = True
-                else:
-                    K_z_pressed = False
-
+        
         arduino_data = ser.readline() # read data from Arduino via serial
         data_ang_p = parse_values(arduino_data) # parse data into list
-        x_pre = x
-        y_pre = y
-        z_pre = z
         x = data_ang_p[0] # x rotation deg/s
         y = data_ang_p[1] # y rotation deg/s
         z = -data_ang_p[2] # z rotation deg/s, mirror the display
@@ -109,17 +89,20 @@ def main():
               "y: {0:4.4f}\t".format(y), \
               "z: {0:4.4f}\t".format(z), \
               "time: ", time.time())
-    
-        if K_x_pressed == True: # pygame axis is different from MPU
-            glRotatef(y-y_pre, 1, 0, 0) 
-        if K_y_pressed == True: # pygame axis is different from MPU
-            glRotatef(x-x_pre, 0, 1, 0) 
-        if K_z_pressed == True:
-            glRotatef(z-z_pre, 0, 0, 1)
-                
+        
+        # paired with glPopMatrix(), preparing to restore the object to the 
+        # original position after displaying the object
+        glPushMatrix()
+        glRotatef(y, 1, 0, 0)
+        glRotatef(x, 0, 1, 0)
+        glRotatef(z, 0, 0, 1)
         glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
         Cube()
         pygame.display.flip()
+        # paired with glPushMatrix(), to restore object to the original
+        # position afte displaying the object
+        glPopMatrix()
+        
         pygame.time.wait(pygame_update_time_step)
         i = i + 1
         
@@ -127,5 +110,3 @@ def main():
     quit()
                 
 main()
-
-
