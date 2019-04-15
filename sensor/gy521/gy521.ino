@@ -1,9 +1,6 @@
 #include<Wire.h>
 
 const int MPU = 0x68; // The address for MPU6050 when AD0 is not set
-// Following offset value is obtained for my particular chip
-const int16_t GyX_offset = 477, GyY_offset = 124, GyZ_offset = 182;
-double x_total_deg = 0, y_total_deg = 0, z_total_deg = 0;
 unsigned long previous_millis = 0;
 const long loop_time_step = 10; // milli-second (ms)
 unsigned int serial_comm_i = 0;  // counter for serial communication
@@ -16,13 +13,20 @@ double s[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; // initialize state variables to 0
 
 // define the class for MPU6050 sensor
 class MPU6050 {
-  
+
   public:
     // variables for raw data
     int16_t AcX = 0, AcY = 0, AcZ = 0, Tmp = 0, GyX = 0, GyY = 0, GyZ = 0;
     // offset corrected data in degree
     double AcX_deg = 0, AcY_deg = 0, AcZ_deg = 0,
            GyX_deg = 0, GyY_deg = 0, GyZ_deg = 0;
+
+    // Define the class constructor
+    MPU6050(int16_t GyX_offset, int16_t GyY_offset, int16_t GyZ_offset) {
+      GyX_offset = GyX_offset;
+      GyY_offset = GyY_offset;
+      GyZ_offset = GyZ_offset;
+    }
 
     // read MPU6050 sensor data
     void sensor_read(int MPU_addr) {
@@ -63,10 +67,12 @@ class MPU6050 {
   private:
     // convertion rate for gyro (total range is +/-250 deg/s
     const double gy_conv_factor = 250.0 / 32767.0;
+    int16_t GyX_offset = 0, GyY_offset = 0, GyZ_offset = 0;
 };
 
 // instantiation of MPU6050 for position and velocity
-MPU6050 pv_sensor;
+// using offset values obtained for my particular chip
+MPU6050 pv_sensor(int16_t(477), int16_t(124), int16_t(182));
 
 void setup() { // setup communication
   Wire.begin();
