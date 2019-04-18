@@ -7,23 +7,16 @@
 Comm::Comm(uint8_t s) {
   scheduled_intv = s;
   i = 0; // Initialize the counter
-  Serial.print(debug_list.size()); Serial.print(", ");
-  Serial.print(i); Serial.print(", ");
-  Serial.println(scheduled_intv);
 }
 
-void Comm::scheduled_send(unsigned long current_millis) {
+void Comm::scheduled_send(void) {
   i = i + 1;
   if (i >= scheduled_intv) {
     i = 0; // reset serial communication counter
-    // Try to limit the data via serial, it's slow. It'll limit loop time
-    Serial.print(s[0]); Serial.print(", ");
-    Serial.print(s[1]); Serial.print(", ");
-    Serial.print(s[2]); Serial.print(", ");
-    Serial.print(debug_list.size()); Serial.print(", ");
-    Serial.print(i); Serial.print(", ");
-    Serial.print(scheduled_intv); Serial.print(", ");
-    Serial.println(current_millis);
+    while (debug_list.size() > 0) {
+      Serial.print(debug_list.shift()); Serial.print(", ");
+    }
+    Serial.println(debug_list.size());
   }
 }
 

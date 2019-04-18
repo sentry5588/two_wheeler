@@ -1,7 +1,13 @@
+/*
+ * The main program for controlling the self-balancing robot
+ * Created by sentry5588, Apr 2019
+ * MIT License
+ */
 #include<Wire.h>
 #include <LinkedList.h>
-#include "MPU6050.h"
 #include "global.h"
+#include "MPU6050.h"
+#include "Motor.h"
 #include "Comm.h"
 
 const int MPU = 0x68; // The address for MPU6050 when AD0 is not set
@@ -12,6 +18,8 @@ unsigned int serial_comm_i = 0;  // counter for serial communication
 // instantiation of MPU6050 for position and velocity
 // using offset values obtained for my particular chip
 MPU6050 pv_sensor(int16_t(477), int16_t(124), int16_t(182));
+// Instantiation of left stepper motor and right stepper motor
+Motor lm, rm; // lm: left motor; rm: right motor
 
 // instantiation of debug list
 Comm send_debug(uint8_t(5));
@@ -46,11 +54,23 @@ void loop() {
 
     // Send controller output to actuators =======================================
     // To do
-
-    // Control debug: 1) live value display, 2) data log, 3) troubleshooting ====
-    send_debug.scheduled_send(current_millis);
     
+    // Control debug: 1) live value display, 2) data log, 3) troubleshooting ====
+    debug_data_manage(current_millis);
+    send_debug.scheduled_send();
+    debug_list.clear();
+
   } // if (this_time_step >= loop_time_step) { // if longer than the time step
 } // void loop(){
 
+void debug_data_manage(unsigned long current_millis) {
+  // Try to limit the data via serial, it's slow. It'll limit loop time
+  debug_list.add(double(current_millis));
+  debug_list.add(s[0]);
+  debug_list.add(s[1]);
+  debug_list.add(s[2]);
+  debug_list.add(s[3]);
+  debug_list.add(s[4]);
+  debug_list.add(s[5]);
+}
 

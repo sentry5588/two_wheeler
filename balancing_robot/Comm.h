@@ -13,7 +13,7 @@ class Comm {
     // Define the class constructor
     Comm(uint8_t scheduled_intv);
     // read MPU6050 sensor data
-    void scheduled_send(unsigned long current_millis);
+    void scheduled_send(void);
 
   private:
     uint8_t scheduled_intv = 0;
