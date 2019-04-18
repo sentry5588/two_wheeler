@@ -3,3 +3,7 @@ Hosting code for a two-wheel-in-parallel robot controlled by Arduino. The robot 
 
 # Project Purpose
 Building a physical platform to test and compare various control and estimation algorithms.
+
+# External Lib
+Used following linked list lib
+https://github.com/ivanseidel/LinkedList
