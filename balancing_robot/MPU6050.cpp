@@ -4,7 +4,11 @@
 #include "global.h"
 
 // Define the class constructor
-MPU6050::MPU6050(double GyX_offset_in, double GyY_offset_in, double GyZ_offset_in) {
+MPU6050::MPU6050(double AcX_offset_in, double AcY_offset_in, double AcZ_offset_in,
+                 double GyX_offset_in, double GyY_offset_in, double GyZ_offset_in) {
+  AcX_offset = AcX_offset_in;
+  AcY_offset = AcY_offset_in;
+  AcZ_offset = AcZ_offset_in;
   GyX_offset = GyX_offset_in;
   GyY_offset = GyY_offset_in;
   GyZ_offset = GyZ_offset_in;
@@ -23,6 +27,10 @@ void MPU6050::sensor_read(int MPU_addr) {
   GyX = Wire.read() << 8 | Wire.read();
   GyY = Wire.read() << 8 | Wire.read();
   GyZ = Wire.read() << 8 | Wire.read();
+
+  // Once new raw data is available, clear estimate lock to allow new estimation
+  // Using estimate lock is to avoid programming mistakes
+  estimate_complete = 0;
 }
 
 // correct the offset of the gyro readings
@@ -36,22 +44,50 @@ void MPU6050::gyro_corr_offset(void) {
 void MPU6050::state_est_GOSI(unsigned long dt) {
   // integrate angular velocity to find angular positions
   // GOSI = Gyro Only Simply Integrator
-  s[0] = s[0] + GyX_deg * (double(dt)) / 1000.0;
-  s[1] = s[1] + GyY_deg * (double(dt)) / 1000.0;
-  s[2] = s[2] + GyZ_deg * (double(dt)) / 1000.0;
 
-  // handle accumulated angular positions out of range: [0-360) deg
-  for (int i=0; i <= 2; i++) {
-    if (s[i] >= 360 ) {
-      s[i] = s[i] - 360.0;
-    } else if (s[i] < 0 ) {
-      s[i] = s[i] + 360.0;
+  if (estimate_complete == 0) {
+    s[0] = s[0] + GyX_deg * (double(dt)) / 1000.0;
+    s[1] = s[1] + GyY_deg * (double(dt)) / 1000.0;
+    s[2] = s[2] + GyZ_deg * (double(dt)) / 1000.0;
+
+    // handle accumulated angular positions out of range: [0-360) deg
+    for (int i = 0; i <= 2; i++) {
+      if (s[i] >= 360 ) {
+        s[i] = s[i] - 360.0;
+      } else if (s[i] < 0 ) {
+        s[i] = s[i] + 360.0;
+      }
+    }
+
+    // directly assign values to angular velocities
+    s[3] = GyX_deg;
+    s[4] = GyY_deg;
+    s[5] = GyZ_deg;
+  } else {
+    for (int i = 0; i <= 5; i++) {
+      s[i] = -1.0; // -1 works an error code
     }
   }
 
-  // directly assign values to angular velocities
-  s[3] = GyX_deg;
-  s[4] = GyY_deg;
-  s[5] = GyZ_deg;
+  // After estimate complete, set estimate lock to 1 to disallow other estimations
+  // Using estimate lock is to avoid programming mistakes
+  estimate_complete = 1;
+}
+
+void MPU6050::state_est_AO(unsigned long dt) {
+  // Estimate robot state using accelerometer data only
+  // AO = Accelerometer Only
+
+  if (estimate_complete == 0) {
+
+  } else {
+    for (int i = 0; i <= 5; i++) {
+      s[i] = -2.0; // -1 works an error code
+    }
+  }
+
+  // After estimate complete, set estimate lock to 1 to disallow other estimations
+  // Using estimate lock is to avoid programming mistakes
+  estimate_complete = 1;
 }
 

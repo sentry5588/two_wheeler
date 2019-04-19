@@ -1,8 +1,8 @@
 /*
- * The main program for controlling the self-balancing robot
- * Created by sentry5588, Apr 2019
- * MIT License
- */
+   The main program for controlling the self-balancing robot
+   Created by sentry5588, Apr 2019
+   MIT License
+*/
 #include<Wire.h>
 #include <LinkedList.h>
 #include "global.h"
@@ -17,7 +17,8 @@ unsigned int serial_comm_i = 0;  // counter for serial communication
 
 // instantiation of MPU6050 for position and velocity
 // using offset values obtained for my particular chip
-MPU6050 pv_sensor(double(477.0), double(124.0), double(182.0));
+MPU6050 pv_sensor(double(0.0), double(0.0), double(0.0),
+                  double(477.0), double(124.0), double(182.0));
 // Instantiation of left stepper motor and right stepper motor
 Motor lm, rm; // lm: left motor; rm: right motor
 
@@ -54,7 +55,7 @@ void loop() {
 
     // Send controller output to actuators =======================================
     // To do
-    
+
     // Control debug: 1) live value display, 2) data log, 3) troubleshooting ====
     debug_data_manage(current_millis);
     send_debug.scheduled_send();
