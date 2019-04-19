@@ -4,10 +4,10 @@
 #include "global.h"
 
 // Define the class constructor
-MPU6050::MPU6050(int16_t GyX_offset, int16_t GyY_offset, int16_t GyZ_offset) {
-  GyX_offset = GyX_offset;
-  GyY_offset = GyY_offset;
-  GyZ_offset = GyZ_offset;
+MPU6050::MPU6050(double GyX_offset_in, double GyY_offset_in, double GyZ_offset_in) {
+  GyX_offset = GyX_offset_in;
+  GyY_offset = GyY_offset_in;
+  GyZ_offset = GyZ_offset_in;
 }
 
 // read MPU6050 sensor data
@@ -39,6 +39,15 @@ void MPU6050::state_est_GOSI(unsigned long dt) {
   s[0] = s[0] + GyX_deg * (double(dt)) / 1000.0;
   s[1] = s[1] + GyY_deg * (double(dt)) / 1000.0;
   s[2] = s[2] + GyZ_deg * (double(dt)) / 1000.0;
+
+  // handle accumulated angular positions out of range: [0-360) deg
+  for (int i=0; i <= 2; i++) {
+    if (s[i] >= 360 ) {
+      s[i] = s[i] - 360.0;
+    } else if (s[i] < 0 ) {
+      s[i] = s[i] + 360.0;
+    }
+  }
 
   // directly assign values to angular velocities
   s[3] = GyX_deg;

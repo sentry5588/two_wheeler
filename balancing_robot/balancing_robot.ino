@@ -17,7 +17,7 @@ unsigned int serial_comm_i = 0;  // counter for serial communication
 
 // instantiation of MPU6050 for position and velocity
 // using offset values obtained for my particular chip
-MPU6050 pv_sensor(int16_t(477), int16_t(124), int16_t(182));
+MPU6050 pv_sensor(double(477.0), double(124.0), double(182.0));
 // Instantiation of left stepper motor and right stepper motor
 Motor lm, rm; // lm: left motor; rm: right motor
 

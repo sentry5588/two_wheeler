@@ -17,7 +17,7 @@ class MPU6050 {
     double AcX_deg = 0.0, AcY_deg = 0.0, AcZ_deg = 0.0,
            GyX_deg = 0.0, GyY_deg = 0.0, GyZ_deg = 0.0;
     // Define the class constructor
-    MPU6050(int16_t GyX_offset, int16_t GyY_offset, int16_t GyZ_offset);
+    MPU6050(double GyX_offset_in, double GyY_offset_in,  double GyZ_offset_in);
     // read MPU6050 sensor data
     void sensor_read(int MPU_addr);
     // correct the offset of the gyro readings
