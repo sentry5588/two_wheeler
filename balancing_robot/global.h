@@ -8,6 +8,9 @@
 
 #include <LinkedList.h>
 
+// (m/s^2) local gravitational acceleration
+extern const double g;
+
 ////////////////////// control variables declaration
 
 // ====================================================================
@@ -17,6 +20,8 @@
 // x, y, z: the angle positions of the robot in x, y, z directions
 // dx, dy, dz: the angle velocities of the robot in x, y, z directions
 extern double s[6];
+extern double s_GOSI[6];
+extern double s_AO[6];
 
 // ====================================================================
 // the control actions from controller to actuators
@@ -28,7 +33,10 @@ extern double s[6];
 // ====================================================================
 // Debug variables
 // --------------------------------------------------------------------
+// Output data in linked list
 extern LinkedList<double> debug_list;
+// An counter as an indicator of the CPU idle time
+extern unsigned long idle_loop_count;
 
 #endif
 

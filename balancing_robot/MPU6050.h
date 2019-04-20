@@ -14,8 +14,8 @@ class MPU6050 {
     // variables for raw data
     int16_t AcX = 0, AcY = 0, AcZ = 0, Tmp = 0, GyX = 0, GyY = 0, GyZ = 0;
     // offset corrected data in degree
-    double AcX_deg = 0.0, AcY_deg = 0.0, AcZ_deg = 0.0,
-           GyX_deg = 0.0, GyY_deg = 0.0, GyZ_deg = 0.0;
+    double AcX_deg_s2 = 0.0, AcY_deg_s2 = 0.0, AcZ_deg_s2 = 0.0,
+           GyX_deg_s = 0.0, GyY_deg_s = 0.0, GyZ_deg_s = 0.0;
     // Define the class constructor
     MPU6050(double AcX_offset_in, double AcY_offset_in, double AcZ_offset_in,
             double GyX_offset_in, double GyY_offset_in,  double GyZ_offset_in);

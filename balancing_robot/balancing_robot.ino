@@ -17,13 +17,13 @@ unsigned int serial_comm_i = 0;  // counter for serial communication
 
 // instantiation of MPU6050 for position and velocity
 // using offset values obtained for my particular chip
-MPU6050 pv_sensor(double(0.0), double(0.0), double(0.0),
+MPU6050 pv_sensor(double(16829.33), double(-0.31663), double(-2772.92),
                   double(477.0), double(124.0), double(182.0));
 // Instantiation of left stepper motor and right stepper motor
 Motor lm, rm; // lm: left motor; rm: right motor
 
 // instantiation of debug list
-Comm send_debug(uint8_t(5));
+Comm send_debug(uint8_t(1));
 
 // To do: move setup into class definition
 void setup() { // setup communication
@@ -49,6 +49,7 @@ void loop() {
     pv_sensor.sensor_read(MPU); // read sensor raw data
     pv_sensor.gyro_corr_offset(); // correct sensor offset
     pv_sensor.state_est_GOSI(this_time_step); // use GOSI to estimate robot states
+    pv_sensor.state_est_AO(this_time_step); // use AO to estimate robot states
 
     // Compute controller output using different control algorithms ==============
     // To do
@@ -57,21 +58,26 @@ void loop() {
     // To do
 
     // Control debug: 1) live value display, 2) data log, 3) troubleshooting ====
+    // Reset CPU idle time indicator
+    idle_loop_count++;
     debug_data_manage(current_millis);
     send_debug.scheduled_send();
     debug_list.clear();
-
+    idle_loop_count = 0; // Reset CPU idle time indicator 
+  } else {
+    idle_loop_count++; // Increase CPU idle time counter by 1
   } // if (this_time_step >= loop_time_step) { // if longer than the time step
 } // void loop(){
 
 void debug_data_manage(unsigned long current_millis) {
   // Try to limit the data via serial, it's slow. It'll limit loop time
   debug_list.add(double(current_millis));
-  debug_list.add(s[0]);
-  debug_list.add(s[1]);
-  debug_list.add(s[2]);
-  debug_list.add(s[3]);
-  debug_list.add(s[4]);
-  debug_list.add(s[5]);
+  debug_list.add(double(idle_loop_count));
+  debug_list.add(s_GOSI[0]);
+  debug_list.add(s_GOSI[1]);
+  debug_list.add(s_GOSI[2]);
+  debug_list.add(s_AO[0]);
+  debug_list.add(s_AO[1]);
+  debug_list.add(s_AO[2]);
 }
 
