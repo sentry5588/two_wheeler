@@ -45,52 +45,92 @@ void MPU6050::state_est_GOSI(unsigned long dt) {
   // integrate angular velocity to find angular positions
   // GOSI = Gyro Only Simply Integrator
 
-  if (estimate_complete == 0) {
-    s_GOSI[0] = s_GOSI[0] + GyX_deg_s * (double(dt)) / 1000.0;
-    s_GOSI[1] = s_GOSI[1] + GyY_deg_s * (double(dt)) / 1000.0;
-    s_GOSI[2] = s_GOSI[2] + GyZ_deg_s * (double(dt)) / 1000.0;
+  if (GOSI_init_flag == 0) {
+    s_GOSI[0] = s_AO[0];
+    s_GOSI[1] = s_AO[1];
+    s_GOSI[2] = s_AO[2];
+    GOSI_init_flag = 1;
+  }
 
-    // handle accumulated angular positions out of range: [0-360) deg
-    for (int i = 0; i <= 2; i++) {
-      if (s_GOSI[i] >= 360 ) {
-        s_GOSI[i] = s_GOSI[i] - 360.0;
-      } else if (s_GOSI[i] < 0 ) {
-        s_GOSI[i] = s_GOSI[i] + 360.0;
-      }
-    }
+  s_GOSI[0] = s_GOSI[0] + GyX_deg_s * (double(dt)) / 1000.0;
+  s_GOSI[1] = s_GOSI[1] + GyY_deg_s * (double(dt)) / 1000.0;
+  s_GOSI[2] = s_GOSI[2] + GyZ_deg_s * (double(dt)) / 1000.0;
 
-    // directly assign values to angular velocities
-    s_GOSI[3] = GyX_deg_s;
-    s_GOSI[4] = GyY_deg_s;
-    s_GOSI[5] = GyZ_deg_s;
-  } else {
-    for (int i = 0; i <= 5; i++) {
-      s_GOSI[i] = -1.0; // works as an error code
+  // handle accumulated angular positions out of range: [0-360) deg
+  for (int i = 0; i <= 2; i++) {
+    if (s_GOSI[i] >= 360.0 ) {
+      s_GOSI[i] = s_GOSI[i] - 360.0;
+    } else if (s_GOSI[i] < 0.0 ) {
+      s_GOSI[i] = s_GOSI[i] + 360.0;
     }
   }
 
-  // After estimate complete, set estimate lock to 1 to disallow other estimations
-  // Using estimate lock is to avoid programming mistakes
-  // estimate_complete = 1;
+  // directly assign values to angular velocities
+  s_GOSI[3] = GyX_deg_s;
+  s_GOSI[4] = GyY_deg_s;
+  s_GOSI[5] = GyZ_deg_s;
 }
 
 void MPU6050::state_est_AO(unsigned long dt) {
   // Estimate robot state using accelerometer data only
   // AO = Accelerometer Only
+  // Use rotation/scaling matrix to scale and rotate axis
+  s_AO[0] =  0.005308863 * AcX + 0.000101228 * AcY - 0.000236367 * AcZ;
+  s_AO[1] = -0.000017130 * AcX - 0.005480948 * AcY - 0.000103338 * AcZ;
+  s_AO[2] = -0.000843155 * AcX + 0.000314773 * AcY - 0.005117289 * AcZ;
 
-  if (estimate_complete == 0) { 
-    // Use rotation/scaling matrix to scale and rotate axis
-    s_AO[0] =  0.005308863*AcX + 0.000101228*AcY - 0.000236367*AcZ;
-    s_AO[1] = -0.000017130*AcX - 0.005480948*AcY - 0.000103338*AcZ;
-    s_AO[2] = -0.000843155*AcX + 0.000314773*AcY - 0.005117289*AcZ;
-  } else {
-    for (int i = 0; i <= 5; i++) {
-      s_AO[i] = -2.0; // works as an error code
+  // handle accumulated angular positions out of range: [0-360) deg
+  for (int i = 0; i <= 2; i++) {
+    if (s_AO[i] >= 360.0 ) {
+      s_AO[i] = s_AO[i] - 360.0;
+    } else if (s_AO[i] < 0.0 ) {
+      s_AO[i] = s_AO[i] + 360.0;
     }
   }
+}
 
-  // After estimate complete, set estimate lock to 1 to disallow other estimations
-  // Using estimate lock is to avoid programming mistakes
-  // estimate_complete = 1;
+void MPU6050::state_est_CF(unsigned long dt) {
+  // Estimate robot state using complementary filter
+  // CF = Complementary Filter
+  double CF_factor = 0.98; // "Trust" on gyro reading
+  double gy_temp = 0, AO_temp = 0;
+  double gy_acc[3] = {0.0, 0.0, 0.0};
+
+  gy_acc[0] = s_CF[0] + GyX_deg_s * (double(dt)) / 1000.0;
+  gy_acc[1] = s_CF[1] + GyY_deg_s * (double(dt)) / 1000.0;
+  gy_acc[2] = s_CF[2] + GyZ_deg_s * (double(dt)) / 1000.0;
+
+  // handle accumulated angular positions out of range: [0-360) deg
+  for (int i = 0; i <= 2; i++) {
+    if (gy_acc[i] >= 360.0 ) {
+      gy_acc[i] = gy_acc[i] - 360.0;
+    } else if (s_GOSI[i] < 0.0 ) {
+      gy_acc[i] = gy_acc[i] + 360.0;
+    }
+  }
+  
+  for (int i = 0; i <= 2; i++) {
+    // To handle situation like: -----------------------------------------
+    // Gyro reads 359 deg; accel reads 1 deg
+    // Without following conversion, the resulting filtered value would
+    // between 1 deg and 359 deg.
+    // However, the resulting value should between -1 (359) deg and 1 deg
+    gy_temp = gy_acc[i];
+    AO_temp = s_AO[i];
+    if ( (gy_temp - AO_temp) < -180.0) {
+      gy_temp = gy_temp + 360.0;
+    } else if ( (gy_temp - AO_temp) > 180.0) {
+      AO_temp = AO_temp + 360.0;
+    } // -----------------------------------------------------------------
+    
+    s_CF[i] =  CF_factor * gy_temp + (1 - CF_factor) * AO_temp;
+    
+    // handle angular positions out of range: [0-360) deg
+    if (s_CF[i] >= 360.0 ) {
+      s_CF[i] = s_CF[i] - 360.0;
+    } else if (s_CF[i] < 0.0 ) {
+      s_CF[i] = s_CF[i] + 360.0;
+    }
+  }
 }
 

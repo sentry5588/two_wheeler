@@ -48,8 +48,9 @@ void loop() {
     // Sensor data reading, processing and state estimation ======================
     pv_sensor.sensor_read(MPU); // read sensor raw data
     pv_sensor.gyro_corr_offset(); // correct sensor offset
-    pv_sensor.state_est_GOSI(this_time_step); // use GOSI to estimate robot states
     pv_sensor.state_est_AO(this_time_step); // use AO to estimate robot states
+    pv_sensor.state_est_GOSI(this_time_step); // use GOSI to estimate robot states
+    pv_sensor.state_est_CF(this_time_step); // use GOSI to estimate robot states
 
     // Compute controller output using different control algorithms ==============
     // To do
@@ -79,5 +80,8 @@ void debug_data_manage(unsigned long current_millis) {
   debug_list.add(s_AO[0]);
   debug_list.add(s_AO[1]);
   debug_list.add(s_AO[2]);
+  debug_list.add(s_CF[0]);
+  debug_list.add(s_CF[1]);
+  debug_list.add(s_CF[2]);
 }
 

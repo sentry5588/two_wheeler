@@ -22,6 +22,7 @@ extern const double g;
 extern double s[6];
 extern double s_GOSI[6];
 extern double s_AO[6];
+extern double s_CF[6];
 
 // ====================================================================
 // the control actions from controller to actuators

@@ -27,6 +27,8 @@ class MPU6050 {
     void state_est_GOSI(unsigned long dt);
     // Estimate robot state using accelerometer data only
     void state_est_AO(unsigned long dt);
+    // Estimate robot state using complementary filter
+    void state_est_CF(unsigned long dt);
 
   private:
     // convertion rate for gyro (total range is +/-250 deg/s
@@ -35,6 +37,8 @@ class MPU6050 {
             GyX_offset = 0, GyY_offset = 0, GyZ_offset = 0;
     // Using following estimate lock is to avoid programming mistakes
     bool estimate_complete = 0;
+    // To flag whether GOSI method finished the initilization using accel. data
+    bool GOSI_init_flag = 0;
 };
 
 #endif
