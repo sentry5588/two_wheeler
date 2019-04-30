@@ -33,8 +33,8 @@ class MPU6050 {
   private:
     // convertion rate for gyro (total range is +/-250 deg/s
     const double gy_conv_factor = 250.0 / 32767.0;
-    int16_t AcX_offset = 0, AcY_offset = 0, AcZ_offset = 0,
-            GyX_offset = 0, GyY_offset = 0, GyZ_offset = 0;
+    double AcX_offset = 0, AcY_offset = 0, AcZ_offset = 0;
+    int16_t GyX_offset = 0, GyY_offset = 0, GyZ_offset = 0;
     // Using following estimate lock is to avoid programming mistakes
     bool estimate_complete = 0;
     // To flag whether GOSI method finished the initilization using accel. data

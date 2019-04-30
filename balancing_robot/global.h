@@ -16,9 +16,10 @@ extern const double g;
 // ====================================================================
 // the measurement from sensor to the controller
 // --------------------------------------------------------------------
-// the state variable for the robot [x, y, z, dx, dy, dz]
-// x, y, z: the angle positions of the robot in x, y, z directions
-// dx, dy, dz: the angle velocities of the robot in x, y, z directions
+// the state variable for the robot
+// [roll, pitch, yaw, d_roll, d_pitch, d_yaw]
+// The robot should not have non-zero roll position on a flat surface
+// d_roll, d_pitch, d_yaw: angular velocities in roll, pitch, and yaw
 extern double s[6];
 extern double s_GOSI[6];
 extern double s_AO[6];
