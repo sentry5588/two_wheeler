@@ -3,6 +3,10 @@
   Created by sentry5588, Apr 2019
   MIT license
 */
+
+#define FORWARD 1
+#define BACKRWARD 0
+
 #ifndef global_h
 #define global_h
 

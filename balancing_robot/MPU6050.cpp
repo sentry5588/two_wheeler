@@ -77,17 +77,10 @@ void MPU6050::state_est_AO(unsigned long dt) {
   AcY_d = double(AcY);
   AcZ_d = double(AcZ);
   
-  debug_list.add(AcX); // to be deleted
-  debug_list.add(AcY); // to be deleted
-  debug_list.add(AcZ); // to be deleted
-
   n = sqrt(AcX_d * AcX_d + AcY_d * AcY_d + AcZ_d * AcZ_d);
   AcX_d = AcX_d / n; // To do, divide by 0
   AcY_d = AcY_d / n;
   AcZ_d = AcZ_d / n;
-  debug_list.add(AcX_d); // to be deleted
-  debug_list.add(AcY_d); // to be deleted
-  debug_list.add(AcZ_d); // to be deleted
 
   // calculate rotation quaternion from [AcX AcY AcZ]
   // to [AcX_offset AcY_offset AcZ_offset]
