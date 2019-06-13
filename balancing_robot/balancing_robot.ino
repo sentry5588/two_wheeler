@@ -3,8 +3,9 @@
    Created by sentry5588, Apr 2019
    MIT License
 */
-#include<Wire.h>
+#include <Wire.h>
 #include <LinkedList.h>
+#include <Timer5.h>
 #include "global.h"
 #include "MPU6050.h"
 #include "Motor.h"
@@ -18,7 +19,7 @@ const unsigned int Wheel_Step_Pin_R = 9; // Step for right wheel
 
 unsigned long previous_millis = 0;
 unsigned long this_time_step = 0;
-const long loop_time_step = 15; // milli-second (ms)
+const long loop_time_step = 10; // milli-second (ms)
 unsigned int serial_comm_i = 0;  // counter for serial communication
 
 // instantiation of MPU6050 for position and velocity
@@ -32,7 +33,7 @@ Motor rm(Wheel_Dir_Pin_L, Wheel_Step_Pin_L); // rm: right motor
 // instantiation of debug list
 Comm send_debug(uint8_t(1));
 
-// To do: move setup into class definition
+// To do: move sensor address and comm setup into sensor class definition
 void setup() { // setup communication
   Wire.begin();
   Wire.beginTransmission(MPU);
@@ -47,8 +48,16 @@ void setup() { // setup communication
   pinMode(Wheel_Dir_Pin_R, OUTPUT);
   pinMode(Wheel_Step_Pin_R, OUTPUT);
 
-  digitalWrite(Wheel_Dir_Pin_L, HIGH);
+  // To be deleted once a jumper wire is found
+  pinMode(22, OUTPUT);
+  pinMode(23, OUTPUT);
+  pinMode(24, OUTPUT);
+  digitalWrite(22, HIGH);
+  digitalWrite(23, HIGH);
+  digitalWrite(24, HIGH);
 
+  // Setup timer trigger interval (us)
+  startTimer5(20L);
 }
 
 void loop() {
@@ -59,9 +68,6 @@ void loop() {
   // Main control loop
   if (this_time_step >= loop_time_step) { // if longer than the time step
     previous_millis = current_millis; // save the last time the code ran
-
-    digitalWrite(Wheel_Step_Pin_L, HIGH);
-    digitalWrite(Wheel_Step_Pin_L, LOW);
 
     // Sensor data reading, processing and state estimation ======================
     pv_sensor.sensor_read(MPU); // read sensor raw data
@@ -100,5 +106,13 @@ void debug_data_manage(unsigned long current_millis) {
   //  debug_list.add(s_CF[0]);
   //  debug_list.add(s_CF[1]);
   //  debug_list.add(s_CF[2]);
+}
+
+ISR(timer5Event) {
+  resetTimer5();
+  //  digitalWrite(Wheel_Step_Pin_L, HIGH);
+  //  digitalWrite(Wheel_Step_Pin_L, LOW);
+  PORTH |= _BV(PH4);
+  PORTH &= ~_BV(PH4);
 }
 
