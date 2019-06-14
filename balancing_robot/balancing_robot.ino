@@ -16,6 +16,7 @@ const unsigned int Wheel_Dir_Pin_L = 6;  // Direction for left wheel
 const unsigned int Wheel_Step_Pin_L = 7; // Step for left wheel
 const unsigned int Wheel_Dir_Pin_R = 8;  // Direction for right wheel
 const unsigned int Wheel_Step_Pin_R = 9; // Step for right wheel
+unsigned long debug_microstep_count = 0;
 
 unsigned long previous_millis = 0;
 unsigned long this_time_step = 0;
@@ -52,12 +53,12 @@ void setup() { // setup communication
   pinMode(22, OUTPUT);
   pinMode(23, OUTPUT);
   pinMode(24, OUTPUT);
-  digitalWrite(22, HIGH);
+  digitalWrite(22, LOW);
   digitalWrite(23, HIGH);
-  digitalWrite(24, HIGH);
+  digitalWrite(24, LOW);
 
   // Setup timer trigger interval (us)
-  startTimer5(20L);
+  startTimer5(500L);
 }
 
 void loop() {
@@ -97,6 +98,7 @@ void debug_data_manage(unsigned long current_millis) {
   // Try to limit the data via serial, it's slow. It'll limit loop time
   debug_list.add(double(this_time_step));
   debug_list.add(double(idle_loop_count));
+  debug_list.add(double(debug_microstep_count));
   //  debug_list.add(s_GOSI[0]);
   //  debug_list.add(s_GOSI[1]);
   //  debug_list.add(s_GOSI[2]);
@@ -112,7 +114,13 @@ ISR(timer5Event) {
   resetTimer5();
   //  digitalWrite(Wheel_Step_Pin_L, HIGH);
   //  digitalWrite(Wheel_Step_Pin_L, LOW);
-  PORTH |= _BV(PH4);
-  PORTH &= ~_BV(PH4);
+  if (debug_microstep_count < 200 * 4) {
+    PORTH |= _BV(PH4);
+    PORTH &= ~_BV(PH4);
+  }
+  if (debug_microstep_count == 2000) {
+    debug_microstep_count = 0;
+  }
+  debug_microstep_count ++;
 }
 
