@@ -98,13 +98,12 @@ void debug_data_manage(unsigned long current_millis) {
   // Try to limit the data via serial, it's slow. It'll limit loop time
   debug_list.add(double(this_time_step));
   debug_list.add(double(idle_loop_count));
-  debug_list.add(double(debug_microstep_count));
   //  debug_list.add(s_GOSI[0]);
   //  debug_list.add(s_GOSI[1]);
   //  debug_list.add(s_GOSI[2]);
-  //  debug_list.add(s_AO[0]);
-  //  debug_list.add(s_AO[1]);
-  //  debug_list.add(s_AO[2]);
+  debug_list.add(s_AO[0]);
+  debug_list.add(s_AO[1]);
+  debug_list.add(s_AO[2]);
   //  debug_list.add(s_CF[0]);
   //  debug_list.add(s_CF[1]);
   //  debug_list.add(s_CF[2]);
