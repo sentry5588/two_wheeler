@@ -1,2 +1,7 @@
 # Notebook Checkpoints
 .ipynb_checkpoints/
+*.aux
+*.log
+*.out
+*.tmp
+~$*.docx
