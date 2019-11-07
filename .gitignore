@@ -4,4 +4,6 @@
 *.log
 *.out
 *.tmp
+*.bbl
+*.blg
 ~$*.docx

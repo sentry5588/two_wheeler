@@ -101,6 +101,7 @@ In the next subsection, I will develop the nonlinear continuous-time
 dynamics.
 
 \subsection{Nonlinear Continuous-Time Model}
+\subsubsection{Derived from Newton's 2nd law}
 Summing the forces in figure~\ref{fig_1d_free_body_diagram} in the horizontal
 direction we have
 \begin{align}
@@ -160,32 +161,60 @@ F_x &= m\ddot{p}_x \\
 \label{equ_nonlinear_CT_dynamics}
 \end{align}
 
-\subsubsection{Check dynamics at special points 
+\textbf{Check dynamics at special points 
 for~(\ref{equ_nonlinear_CT_dynamics})}
+
 When $\theta=0$, i.e. the vertical up position,
 (\ref{equ_nonlinear_CT_dynamics}) becomes
 \begin{align}
 I\ddot{\theta} = F_xh
 \end{align}
-When $\theta=\pi$, i.e. the horizontal position pointing to the left
+When $\theta=\pi/2$, i.e. the horizontal position pointing to the left
 (assume single contact point with the ground)
 (\ref{equ_nonlinear_CT_dynamics}) becomes
 \begin{align}
 (I+mh^2)\ddot{\theta} = mgh
 \end{align}
-When $\theta=-\pi$, i.e. the horizontal position pointing to the right
+When $\theta=-\pi/2$, i.e. the horizontal position pointing to the right
 (assume single contact point with the ground)
 (\ref{equ_nonlinear_CT_dynamics}) becomes
 \begin{align}
 (I+mh^2)\ddot{\theta} = -mgh
 \end{align}
-When $\theta=\pi/2$, i.e. the horizontal position pointing to the left
+When $\theta=\pi/4$, i.e. the horizontal position pointing to the left
 (assume single contact point with the ground)
 (\ref{equ_nonlinear_CT_dynamics}) becomes
 \begin{align}
 (I+\frac{1}{2}mh^2)\ddot{\theta}+\frac{1}{2}mh^2\dot{\theta}^2
 &= \frac{\sqrt{2}}{2}F_xh + \frac{\sqrt{2}}{2}mgh
 \end{align}
+
+\subsubsection{Derived from Lagrangian mechanics}
+The derivation follows~\cite{peacock_2007_mit_lagrange}.
+The Lagrangian is $L=KE-PE$ where $KE$ and $PE$ are the
+kinematic energy and potential energy, respectively.
+The equation of motion can be determined by applying
+Lagrange mechanics in two generalized coordinate $p_x$ and $\theta$
+\begin{align}
+\frac{\mathrm{d}}{\mathrm{d}t}\bigg(
+\frac{\partial L}{\partial \dot{p}_x}\bigg)
+-\frac{\partial L}{\partial p_x}=
+\frac{\partial W}{\partial p_x}, \quad
+\frac{\mathrm{d}}{\mathrm{d}t}\bigg(
+\frac{\partial L}{\partial \dot{\theta}}\bigg)
+-\frac{\partial L}{\partial \theta}=
+\frac{\partial W}{\partial \theta}
+\end{align}
+The kinematic energy and potential energy are
+\begin{align}
+KE = \frac{1}{2}m\dot{p}_x+\frac{1}{2}I\dot{\theta},\quad
+PE = mgh\cos(\theta)
+\end{align}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{plain}
+\bibliography{MPC}{}
 
 
 \end{document}
