@@ -15,7 +15,7 @@
 
 \title{Model Predictive Control}
 \date{2020}
-\author{sentry5588}
+\author{sentry5588, MIT License}
 
 \begin{document}
 \pagecolor{lightgray}
@@ -193,9 +193,11 @@ When $\theta=\pi/4$, i.e. the horizontal position pointing to the left
 The derivation follows~\cite{peacock_2007_mit_lagrange}.
 The Lagrangian is $L=KE-PE$ where $KE$ and $PE$ are the
 kinematic energy and potential energy, respectively.
+$W$ is the virtual work.
 The equation of motion can be determined by applying
 Lagrange mechanics in two generalized coordinate $p_x$ and $\theta$
 \begin{align}
+\label{equ_lagrangian_original}
 \frac{\mathrm{d}}{\mathrm{d}t}\bigg(
 \frac{\partial L}{\partial \dot{p}_x}\bigg)
 -\frac{\partial L}{\partial p_x}=
@@ -205,15 +207,47 @@ Lagrange mechanics in two generalized coordinate $p_x$ and $\theta$
 -\frac{\partial L}{\partial \theta}=
 \frac{\partial W}{\partial \theta}
 \end{align}
-The kinematic energy and potential energy are
+The kinematic energy, potential energy and virtual work are
 \begin{align}
-KE = \frac{1}{2}m\dot{p}_x+\frac{1}{2}I\dot{\theta},\quad
-PE = mgh\cos(\theta)
+\label{equ_lagrangian_energy_work}
+KE = \frac{1}{2}m\dot{p}_x^2+\frac{1}{2}I\dot{\theta}^2,\quad
+PE = mgh\cos(\theta), \quad
+W = F_x p_x
 \end{align}
+Substitute~(\ref{equ_lagrangian_original})
+with~(\ref{equ_lagrangian_energy_work}), in $p_x$ direction we have
+\begin{align}
+\frac{\mathrm{d}}{\mathrm{d}t}\bigg(
+\frac{\partial}{\partial \dot{p}_x}\bigg(
+\frac{1}{2}m\dot{p}_x^2+\frac{1}{2}I\dot{\theta}^2
+-mgh\cos(\theta)\bigg)\bigg)
+-\frac{\partial}{\partial p_x}\bigg(
+\frac{1}{2}m\dot{p}_x^2+\frac{1}{2}I\dot{\theta}^2
+-mgh\cos(\theta)\bigg)=&
+\frac{\partial}{\partial p_x}F_x p_x \\
+\frac{\mathrm{d}}{\mathrm{d}t}
+(m\dot{p}_x +0-0)
+-(0+0-0)=&
+F_x \\
+\frac{\mathrm{d}}{\mathrm{d}t}
+m\dot{p}_x =& F_x \\
+m\ddot{p}_x =& F_x
+\end{align}
+Substitute~(\ref{equ_lagrangian_original})
+with~(\ref{equ_lagrangian_energy_work}), in $\theta$ direction we have
 
+
+\textcolor{red}{ ***********************************************\\
+This is where I left off \\
+******************************************************}
+
+\subsection{Model Linearization and discretization}
+I follow~\cite{zhakatayev_2017_successive_linearize_MPC}
+to linearize and discretize the nonlinear continuous-time dynamics
+in~\cite{???}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\bibliographystyle{plain}
+\bibliographystyle{apalike}
 \bibliography{MPC}{}
 
 
