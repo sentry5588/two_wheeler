@@ -220,7 +220,6 @@ W = F_x (p_x+ \dot{\theta}h\cos(\theta)) + F_x h \theta \cos(\theta)
 \end{align}
 Substitute~(\ref{equ_lagrangian_original})
 with~(\ref{equ_lagrangian_energy_work}), in $p_x$ direction we have
-\textcolor{red}{*** left here!! substitute virtual work into general form}
 \begin{align}
 \frac{\mathrm{d}}{\mathrm{d}t}\bigg(
 \frac{\partial}{\partial \dot{p}_x}\bigg(
@@ -228,7 +227,7 @@ with~(\ref{equ_lagrangian_energy_work}), in $p_x$ direction we have
 -\frac{\partial}{\partial p_x}\bigg(
 \frac{1}{2}m\dot{p}_x^2+\frac{1}{2}I\dot{\theta}^2
 -mgh\cos(\theta)\bigg)=&
-\frac{\partial}{\partial p_x}F_x p_x 
+\frac{\partial}{\partial p_x}F_x (p_x+ \dot{\theta}h\cos(\theta))
 +\frac{\partial}{\partial p_x} F_x h \theta \cos(\theta) \\
 \frac{\mathrm{d}}{\mathrm{d}t}
 (m\dot{p}_x + 0)
@@ -241,24 +240,29 @@ m\ddot{p}_x =& F_x
 Substitute~(\ref{equ_lagrangian_original})
 with~(\ref{equ_lagrangian_energy_work}), in $\theta$ direction we have
 \begin{align}
-\frac{\mathrm{d}}{\mathrm{d}t}\bigg(
+&\frac{\mathrm{d}}{\mathrm{d}t}\bigg(
 \frac{\partial}{\partial\dot{\theta}}\bigg(
 \frac{1}{2}m\dot{p}_x^2+\frac{1}{2}I\dot{\theta}^2
 -mgh\cos(\theta)\bigg)\bigg)
 -\frac{\partial}{\partial \theta}\bigg(
 \frac{1}{2}m\dot{p}_x^2+\frac{1}{2}I\dot{\theta}^2
--mgh\cos(\theta)\bigg)=&
-\frac{\partial}{\partial \theta}F_x p_x 
-+\frac{\partial}{\partial \theta} F_x h \theta \cos(\theta)
+-mgh\cos(\theta)\bigg)  \\
+=&\frac{\partial}{\partial \theta}F_x (p_x+ \dot{\theta}h\cos(\theta))
++\frac{\partial}{\partial \theta} F_x h \theta \cos(\theta) 
 \end{align}
 \begin{align}
 \frac{\mathrm{d}}{\mathrm{d}t}
 (0+I\dot{\theta}-0)
--(0+0+mgh\sin(\theta))=&0+F_x h\cos(\theta)+F_x h\theta(-\sin(\theta))\\
+-(0+0+mgh\sin(\theta))=&-F_x\dot{\theta}h\sin(\theta)
++F_x h\cos(\theta)-F_x h\theta\sin(\theta)\\
 (0+I\ddot{\theta}-0)
--(0+0+mgh\sin(\theta))=& F_x h\cos(\theta)-F_x h\theta\sin(\theta) \\
-I\ddot{\theta}-mgh\sin(\theta)=& F_x h\cos(\theta)-F_x h\theta\sin(\theta) \\
-I\ddot{\theta}+F_x h\theta\sin(\theta)=& F_x h\cos(\theta)+mgh\sin(\theta)
+-(0+0+mgh\sin(\theta))=& -F_x\dot{\theta}h\sin(\theta)
++F_x h\cos(\theta)-F_x h\theta\sin(\theta) \\
+I\ddot{\theta}-mgh\sin(\theta)=&-F_x\dot{\theta}h\sin(\theta)
++F_x h\cos(\theta)-F_x h\theta\sin(\theta) \\
+I\ddot{\theta}
++F_x h\sin(\theta)(\theta+\dot{\theta})
+=& F_x h\cos(\theta)+mgh\sin(\theta)
 \end{align}
 
 
