@@ -7,3 +7,6 @@ https://github.com/ivanseidel/LinkedList
 
 ArduinoTimer - Used for timer interrupt
 https://github.com/carlosrafaelgn/ArduinoTimer
+
+# Note
+I decided to use ROS on Raspberry PI instead of Arduino for the robot.
