@@ -1,0 +1,14 @@
+angular_x_bias: 0.0
+angular_x_scaling: 1.0
+angular_y_bias: 0.0
+angular_y_scaling: 1.0
+angular_z_bias: 0.0
+angular_z_scaling: 1.0
+
+linear_x_accel_bias: 0.0
+linear_x_accel_scaling: 1.0
+linear_y_accel_bias: 0.0
+linear_y_accel_scaling: 1.0
+linear_z_accel_bias: 0.0
+linear_z_accel_scaling: 1.0
+
