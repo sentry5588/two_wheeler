@@ -55,7 +55,7 @@ Table~\ref{tab_robot_specification}
 \hspace*{\fill} % separation between the subfigures
 \begin{subfigure}{0.3\textwidth}
 \includegraphics[width=\linewidth]{./figures/free_body_diagram.png}
-\caption{1D Free Dody Diagram} \label{fig_1d_free_body_diagram}
+\caption{1D Free Body Diagram} \label{fig_1d_free_body_diagram}
 \end{subfigure}
 \caption{Two Wheel Balancing Robot} \label{fig_robots}
 \end{figure}
@@ -208,14 +208,15 @@ Lagrange mechanics in two generalized coordinate $p_x$ and $\theta$
 \frac{\partial W}{\partial \theta}
 \end{align}
 The contact point displacement relative to the center of gravity is
-$\dot{\theta}h\cos(\theta)$. Therefore the absolute velocity of
-the contact point is $p_x + \dot{\theta}h\cos(\theta)$.
+$h\theta \cos(\theta)$. Therefore the absolute velocity of
+the contact point is $p_x + h\theta \cos(\theta)$.
 The kinematic energy, potential energy and virtual work are
 \begin{align}
 KE = \frac{1}{2}m\dot{p}_x^2
 +\frac{1}{2}I\dot{\theta}^2,\quad
 PE = mgh\cos(\theta), \quad
-W = F_x (p_x+ \dot{\theta}h\cos(\theta)) + F_x h \theta \cos(\theta)
+W = F_x (p_x+ h\theta \cos(\theta)) + F_x h \theta \cos(\theta)
+= F_x p_x + 2F_x h \theta \cos(\theta)
 \label{equ_lagrangian_energy_work}
 \end{align}
 Substitute~(\ref{equ_lagrangian_original})
@@ -227,8 +228,8 @@ with~(\ref{equ_lagrangian_energy_work}), in $p_x$ direction we have
 -\frac{\partial}{\partial p_x}\bigg(
 \frac{1}{2}m\dot{p}_x^2+\frac{1}{2}I\dot{\theta}^2
 -mgh\cos(\theta)\bigg)=&
-\frac{\partial}{\partial p_x}F_x (p_x+ \dot{\theta}h\cos(\theta))
-+\frac{\partial}{\partial p_x} F_x h \theta \cos(\theta) \\
+\frac{\partial}{\partial p_x}F_x p_x
++\frac{\partial}{\partial p_x} 2F_x h \theta \cos(\theta) \\
 \frac{\mathrm{d}}{\mathrm{d}t}
 (m\dot{p}_x + 0)
 -(0+0-0)=&
@@ -247,22 +248,22 @@ with~(\ref{equ_lagrangian_energy_work}), in $\theta$ direction we have
 -\frac{\partial}{\partial \theta}\bigg(
 \frac{1}{2}m\dot{p}_x^2+\frac{1}{2}I\dot{\theta}^2
 -mgh\cos(\theta)\bigg)  \\
-=&\frac{\partial}{\partial \theta}F_x (p_x+ \dot{\theta}h\cos(\theta))
-+\frac{\partial}{\partial \theta} F_x h \theta \cos(\theta) 
+=&\frac{\partial}{\partial \theta}F_x p_x
++\frac{\partial}{\partial \theta} 2F_x h \theta \cos(\theta) 
 \end{align}
 \begin{align}
 \frac{\mathrm{d}}{\mathrm{d}t}
 (0+I\dot{\theta}-0)
--(0+0+mgh\sin(\theta))=&-F_x\dot{\theta}h\sin(\theta)
-+F_x h\cos(\theta)-F_x h\theta\sin(\theta)\\
+-(0+0+mgh\sin(\theta))=&-2 F_x h\theta \sin(\theta)
++2F_x h\cos(\theta)\\
 (0+I\ddot{\theta}-0)
--(0+0+mgh\sin(\theta))=& -F_x\dot{\theta}h\sin(\theta)
-+F_x h\cos(\theta)-F_x h\theta\sin(\theta) \\
-I\ddot{\theta}-mgh\sin(\theta)=&-F_x\dot{\theta}h\sin(\theta)
-+F_x h\cos(\theta)-F_x h\theta\sin(\theta) \\
+-(0+0+mgh\sin(\theta))=& -2 F_x h\theta \sin(\theta)
++2F_x h\cos(\theta) \\
+I\ddot{\theta}-mgh\sin(\theta)=&-2 F_x h\theta \sin(\theta)
++2F_x h\cos(\theta) \\
 I\ddot{\theta}
-+F_x h\sin(\theta)(\theta+\dot{\theta})
-=& F_x h\cos(\theta)+mgh\sin(\theta)
+=& 2 F_x h\cos(\theta)+mgh\sin(\theta)
+-2 F_x h\theta \sin(\theta)
 \end{align}
 
 
